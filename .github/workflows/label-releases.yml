@@ -1,3 +1,6 @@
+permissions:
+  contents: read
+
 on:
   pull_request_target:
     branches:
@@ -7,6 +10,8 @@ jobs:
   label-release:
     if: ${{ startsWith(github.event.pull_request.title, 'release:') }}
     runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
     steps:
       - run: echo this is a release PR
       - run: gh pr edit ${{ github.event.pull_request.number }} --add-label release

@@ -6,9 +6,15 @@ on:
     branches: [ main ]
   pull_request:
 
+permissions:
+  contents: read
+
 jobs:
   CodeQL-Build:
     runs-on: ubuntu-latest
+    permissions:
+      security-events: write
+      actions: read
 
     steps:
       - name: Checkout repository
