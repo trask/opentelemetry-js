@@ -19,7 +19,8 @@ on:
           - semconv # only semantic convention package
 
 permissions:
-  contents: read
+  contents: write
+  pull-requests: write
 
 jobs:
   create-or-update-release-pr:
@@ -37,19 +38,13 @@ jobs:
 
       - run: npm ci
 
-      - uses: actions/create-github-app-token@df432ceedc7162793a195dd1713ff69aefc7379e # v2.0.6
-        id: otelbot-token
-        with:
-          app-id: ${{ vars.OTELBOT_APP_ID }}
-          private-key: ${{ secrets.OTELBOT_PRIVATE_KEY }}
-
       - name: Create/Update Release PR
         run: |
           git config user.name otelbot
           git config user.email 197425009+otelbot@users.noreply.github.com
           npm run github:create_or_update_release_pr
         env:
-          GH_TOKEN: ${{ steps.otelbot-token.outputs.token }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           RELEASE_SCOPE: ${{ github.event.inputs.release_scope }}
           RELEASE_KIND: ${{ github.event.inputs.release_scope }}:${{ github.event.inputs.release_type }}
           RELEASE_PR_REMOTE: origin
